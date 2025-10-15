@@ -1,0 +1,110 @@
+
+ARM mikroverzérlő programozási segédlet stm32f4/l4 típusú
+mikroprocesszorokhoz, Nucleo64, DOA kártyákhoz.
+
+A kezdőértékeket és a segédlet működését beállító függvényt a program
+elején kell egyszer meghívni (brd.h).
+
+Segédlet beállítása:                    brd_init()
+
+
+LED-ek kezelése (brd.h)
+---------------------------------------------------------------------------
+
+Az egyes kártyák eltérő számú LED-et tartalmazhatnak, a függvényeknek
+a paramétere a LED-et kiválasztó LED0, LED1, stb.  makró lehet. Az egy
+LED-es Nucleo kártyák esetében a LED0 paramétert kell alkalmazni.
+
+LED bekapcsolása:                       brd_led_on(LED0)
+Kikapcsolása:                           brd_led_off(LED0)
+Átváltása:                              brd_led_toggle(LED0)
+Beállítása:                             brd_led_set(LED0, érték)
+Fényerő beállítása:                     brd_led_pwm(fényerő%)
+Aktuális állapot:                       brd_led_get(LED0)
+
+A fényerő változtatást nem mindegyik kártya támogatja, ezeken az 50%
+alatti értékek a LED-et kikapcsolják, az 50% fölöttiek pedig be.
+
+
+Nyomógombok kezelése (brd.h)
+---------------------------------------------------------------------------
+
+A segédlet tartalmazza a pergésmentesítést. A nyomógomb a BTN0, BTN1,
+stb. paraméterekkel választható ki, az egy gombos kártyák esetén a
+BTN0 paramétert kell alkalmazni.
+
+Állapot lekérdezés:                     brd_button(BTN0)
+Megnyomás vizsgálat:                    brd_button_pressed(BTN0)
+Elengedés vizsgálat:                    brd_button_released(BTN0)
+
+
+Terminál kimenet (terminal.h)
+---------------------------------------------------------------------------
+
+A kártya számítógéphez csatlakoztatásakor létrejön egy virtuális COM
+port (VCP) a számítógépen, amely össze van kötve a processzor egy UART
+portjával. A segédlet ezt az UART-ot állítja be standard ki- és
+bemenetként, így a VCP portra csatlakozó terminal emulátor program
+képernyőjére a printf függvényekkel lehet kiírni. A terminal emulátor
+szükséges beállításai:
+
+Sebesség:                               115200 baud
+Adatbitek:                              8
+Stop bitek:                             1
+Paritás:                                nincs
+Átvitel vezérlés:                       nincs
+
+A printf-el kiírt szövegek megjelenítését az alábbi terminál kezelő
+függvényekkel szabályozhatjuk:
+
+Kurzor bekapcsolása:                    tu_show()
+Kurzor kikapcsolása:                    tu_hide()
+Kurzor pozíció elmentése:               tu_save_cursor()
+Kurzor mozgatás az elmentettre:         tu_restore_cursor()
+Kurzor pocícionálása (bal felső
+sarok= 1,1):                            tu_go(x,y)
+Képernyőtörlés (aktuális színnel):      tu_clear_screen()
+Kurzornál lévő karakter törlése:        tu_clear_char()
+Következő kiírás színe:                 tu_color(bg,fg)
+
+A szín 3 bites érték, 0. bit= piros, 1. bit= zöld, 2. bit= kék.  Ha az
+értékhez 60-at adunk, akkor "nagy intenzitású" megjelenítést
+kapunk. Ha a paraméter negatív, akkor az a szín nem módosul.
+
+
+Terminál bemenet (terminal.h)
+---------------------------------------------------------------------------
+
+A blokkolt olvasást végző függvények, pl. getchar, scanf, read, stb.
+használata NEM JAVASOLT!! Helyette a "van-e beolvasható adat"
+vizsgálatot végző segédlet függvényeket használjuk.
+
+Karakter beolvasás:                     tu_getc()
+Szöveg (sor) beolvasás:                 tu_gets(buf,len)
+
+A karakter olvasó függvény 0 értéket ad, ha nincs lenyomott billentyű.
+Ha van, akkor a lenyomott billentyű karakterének ASCII kódját adja.
+Az ASCII kóddal nem rendelkező speciális billentyűk (Funkció, kuzor
+mozgató, stb.) esetén egy negatív értéket kapunk (lásd a terminal.h
+fájlban).
+
+A sor beolvasó vizsgálat addig lesz hamis értékű, amíg az ENTER-t le
+nem nyomjuk. Addig a "buf" tömbben szerkeszti a szöveget.  A következő
+szerkesztő karakterek használhatók: HOME, ^A, END, ^E, kurzor balra,
+kurzor jobbra, ^K, backspace, DEL. A buffert a beolvasás elején
+törölni kell, pl. buf[0]=0.
+
+A buffer tartalma az sscanf, vagy strtok segítségével feldolgozható.
+
+
+Óra kezelése (utils.h)
+---------------------------------------------------------------------------
+
+A gép órája 0-ról indul és az 1969 óta eltelt időt számolja.  Az
+értéke a szokásos függvényekkel olvasható, pl. time(), gettimeofday(),
+stb. Időzóna kezelés nincs, a függvények GMT-t használnak. A segédlet
+a következő függvényeket biztosítja:
+
+Óra ms-ben (unsigned int):              msnow()
+Óra sec-ben, tört értékkel (double):    dnow()
+
