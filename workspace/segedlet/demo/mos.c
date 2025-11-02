@@ -113,7 +113,7 @@ mos_cmd_reset()
 {
   if (!reset_wait_answer)
     {
-      tu_color(0, 61);
+      tu_color(0, RGB_BRED);
       printf("Realy (Y/n)?\n");
       reset_wait_answer= 1;
     }
@@ -145,9 +145,9 @@ mos_cmd_reset()
 static void
 mos_prompt()
 {
-  tu_color(0, 63);
+  tu_color(0, RGB_BYELLOW);
   printf("mos> ");
-  tu_color(0, 67);
+  tu_color(0, RGB_BWHITE);
   tu_show();
 }
 
