@@ -63,22 +63,23 @@ struct tu_input_t {
 };
 
 enum tu_color_t {
-  COLOR_BLACK   = 0,
-  COLOR_RED     = 1,
-  COLOR_GREEN   = 2,
-  COLOR_YELLOW  = 3,
-  COLOR_BLUE    = 4,
-  COLOR_MAGENTA = 5,
-  COLOR_CYAN    = 6,
-  COLOR_WHITE   = 7,
-  COLOR_BBLACK  = 0+60,
-  COLOR_BRED    = 1+60,
-  COLOR_BGREEN  = 2+60,
-  COLOR_BYELLOW = 3+60,
-  COLOR_BBLUE   = 4+60,
-  COLOR_BMAGENTA= 5+60,
-  COLOR_BCYAN   = 6+60,
-  COLOR_BWHITE  = 7+60,
+  RGB_NONE    = -1,
+  RGB_BLACK   = 0,
+  RGB_RED     = 1,
+  RGB_GREEN   = 2,
+  RGB_YELLOW  = 3,
+  RGB_BLUE    = 4,
+  RGB_MAGENTA = 5,
+  RGB_CYAN    = 6,
+  RGB_WHITE   = 7,
+  RGB_BBLACK  = 0x10,
+  RGB_BRED    = 0x11,
+  RGB_BGREEN  = 0x12,
+  RGB_BYELLOW = 0x13,
+  RGB_BBLUE   = 0x14,
+  RGB_BMAGENTA= 0x15,
+  RGB_BCYAN   = 0x16,
+  RGB_BWHITE  = 0x17,
 };
 
 extern struct tu_input_t ti_std;
@@ -145,6 +146,16 @@ extern void ftu_clear_char(FILE *f);
 extern void tu_color(enum tu_color_t bg, enum tu_color_t fg);
 extern void dtu_color(int fd, enum tu_color_t bg, enum tu_color_t fg);
 extern void ftu_color(FILE *f, enum tu_color_t bg, enum tu_color_t fg);
+
+#define tu_bgfg(BG,FG) tu_color(BG,FG)
+#define tu_fgbg(FG,BG) tu_color(BG,FG)
+
+#define tu_fg(X) tu_color(RGB_NONE,X)
+#define tu_bg(X) tu_color(X,RGB_NONE)
+#define dtu_fg(D,X) dtu_color(D,RGB_NONE,X)
+#define dtu_bg(D,X) dtu_color(D,X,RGB_NONE)
+#define ftu_fg(F,X) dtu_color(F,RGB_NONE,X)
+#define ftu_bg(F,X) dtu_color(F,X,RGB_NONE)
 
 extern void tu_hide();
 extern void dtu_hide(int fd);

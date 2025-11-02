@@ -601,17 +601,26 @@ tu_clear_char()
 
 /*--------------------------------*/
 
-static int tu_bg_color, tu_fg_color;
+//static int tu_bg_color, tu_fg_color;
 
+/*
+        FG   BG
+Normal  30   40
+Bright  90  100
+ */
 void
 dtu_color(int fd, enum tu_color_t bg, enum tu_color_t fg)
 {
+  if (bg > 0)
+    bg+= (bg&0x10)?100-0x10:40;
+  if (fg > 0)
+    fg+= (fg&0x10)?90-0x10:30;
   if ((bg >= 0) && (fg >= 0))
-    dprintf(fd, "\033[%d;%dm", (tu_bg_color= bg)+40, (tu_fg_color= fg)+30);
+    dprintf(fd, "\033[%d;%dm", bg, fg);
   else if (bg >= 0)
-    dprintf(fd, "\033[%dm", (tu_bg_color= bg)+40);
+    dprintf(fd, "\033[%dm", bg);
   else if (fg >= 0)
-    dprintf(fd, "\033[%dm", (tu_fg_color= fg)+30);
+    dprintf(fd, "\033[%dm", fg);
   fflush(NULL);
 }
 
