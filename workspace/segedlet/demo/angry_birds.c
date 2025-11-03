@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "mos.h"
 
+#include "angry_birds.h"
+
 
 enum st_t {
   st_none   =  0,
@@ -33,7 +35,7 @@ enum st_t {
 
  */
 
-static int bottom= 40;           // last row of window
+static int bottom= 24;           // last row of window
 static enum st_t state;          // start state
 static char buf[100];            // line ditor buffer
 static float alpha, v0;          // shoot parameters
@@ -241,11 +243,14 @@ static void start_result()
 {
   int hit;
   hit= last_col == target;
-  if (hit) tu_color(2,0); else tu_color(1,7);
+  if (hit)
+    tu_color(RGB_GREEN,RGB_BLACK);
+  else
+    tu_color(RGB_RED,RGB_WHITE);
   tu_go(30,12); printf("             ");
   tu_go(30,13); printf("   %s  ", hit?"You won ":"You lost");
   tu_go(30,14); printf("             ");
-  tu_color(4,7);
+  tu_color(RGB_BLUE,RGB_WHITE);
   tu_go(8,16);  printf("  Press BTN/space to restart, ENTER for interactive setting  ");
   tu_color(0,7);
   if (hit)

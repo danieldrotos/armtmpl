@@ -7,6 +7,7 @@
 #include "shoot_game.h"
 #include "throw.h"
 #include "drop.h"
+#include "angry_birds.h"
 #include "mos.h"
 #include "utils.h"
 
@@ -87,6 +88,7 @@ void demo_init()
   mos_create_task("blink_set", 1, &blink_set)->init= &blink_set_start;
   mos_create_task("shoot_game", 1, &shoot_game);
   mos_create_task("flappy_bird", 1, &flappy_loop);
+  mos_create_task("angry_birds", 1, &ab_loop);
   mos_create_task("throw", 1, &throw)->init= &throw_init;
   mos_create_task("drop", 1, &drop);
 }

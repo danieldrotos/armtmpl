@@ -611,15 +611,15 @@ Bright  90  100
 void
 dtu_color(int fd, enum tu_color_t bg, enum tu_color_t fg)
 {
-  if (bg > 0)
+  if ((int)bg >= 0)
     bg+= (bg&0x10)?100-0x10:40;
-  if (fg > 0)
+  if ((int)fg >= 0)
     fg+= (fg&0x10)?90-0x10:30;
-  if ((bg >= 0) && (fg >= 0))
+  if (((int)bg >= 0) && ((int)fg >= 0))
     dprintf(fd, "\033[%d;%dm", bg, fg);
-  else if (bg >= 0)
+  else if ((int)bg >= 0)
     dprintf(fd, "\033[%dm", bg);
-  else if (fg >= 0)
+  else if ((int)fg >= 0)
     dprintf(fd, "\033[%dm", fg);
   fflush(NULL);
 }
