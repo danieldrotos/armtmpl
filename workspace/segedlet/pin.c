@@ -184,6 +184,7 @@ int pin_ison(struct pin_t *p)
 
 int pin_val(struct pin_t *p)
 {
+  pin_debounce(p);
   return p->filtered;
 }
 
