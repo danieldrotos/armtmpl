@@ -10,7 +10,6 @@
 void app_init()
 {
   brd_init();
-  printf("Hello World!\n");
   demo_init();
   mos();
   mos_start_task("blink", "0.8");

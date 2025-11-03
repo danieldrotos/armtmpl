@@ -379,6 +379,8 @@ shoot_game_init()
   tu_clear_screen();
   tu_go(1,24);
   printf("Press user BTN or q to quit.");
+  tu_go(70,1);
+  printf("Quit:BTN,q");
   show_gun();
   nuof_bulls= 0;
   for (i=0;i<bnr;i++)

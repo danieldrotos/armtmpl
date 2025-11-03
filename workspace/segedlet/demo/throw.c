@@ -1,23 +1,41 @@
 #include <stdio.h>
 #include <math.h>
-#include <throw.h>
+#include <stdlib.h>
 
 #include "brd.h"
 #include "terminal.h"
 #include "planet.h"
 #include "mos.h"
 
+#include "throw.h"
 
 
 static int inited= 0;
 int throw_type= 1;
 
 
-void throw_init1()
+void throw_init_common(int nr)
 {
-  int i, nr= 0, j;
+  int i;
+  int j= 80/(nr+1);
   tu_clear_screen();
   tu_hide();
+  for (i=0; planets[i].col >= 0; i++)
+    {
+      planets[i].col= (i+1)*j;
+      tu_go(planets[i].col, planets[i].row);
+      printf("@");
+    }
+  tu_go(1,max_row+1);
+  printf("%d-----------------------------------------------------------------------------",
+         throw_type);
+  inited= 1;
+}
+
+
+void throw_init1()
+{
+  int i, nr= 0;
   for (i=0; planets[i].col >= 0; i++)
     {
       planets[i].v0= sqrt(2*planets[i].g*hmax);
@@ -26,28 +44,16 @@ void throw_init1()
       planets[i].last_row= planets[i].row= max_row;
       nr++;
     }
-  j= 80/(nr+1);
-  for (i=0; planets[i].col >= 0; i++)
-    {
-      planets[i].col= (i+1)*j;
-      tu_go(planets[i].col, planets[i].row);
-      printf("@");
-    }
-  tu_go(1,max_row+1);
-  printf("------------------------------------------------------------------------------");
-  inited= 1;
+  throw_init_common(nr);
 }
 
 
 void throw_init2()
 {
-  int i, nr= 0, j;
+  int i, nr= 0;
   float gmin= planets[0].g, v0;
-  tu_clear_screen();
-  tu_hide();
   for (i=0; planets[i].col >= 0; i++)
     {
-      //planets[i].v0= sqrt(2*planets[i].g*hmax);
       planets[i].t0= HAL_GetTick();
       planets[i].h= 0;
       planets[i].last_row= planets[i].row= max_row;
@@ -56,23 +62,14 @@ void throw_init2()
         gmin= planets[i].g;
     }
   v0= sqrt(2*gmin*hmax);
-  j= 80/(nr+1);
-  for (i=0; planets[i].col >= 0; i++)
-    {
-      planets[i].v0= v0;
-      planets[i].col= (i+1)*j;
-      tu_go(planets[i].col, planets[i].row);
-      printf("@");
-    }
-  tu_go(1,max_row+1);
-  printf("------------------------------------------------------------------------------");
-  inited= 1;
+  for (i= 0; planets[i].col >= 0; i++)
+    planets[i].v0= v0;
+  throw_init_common(nr);
 }
 
 
-void throw_init()
+void throw_init(char *p)
 {
-  char *p= mos_get_param();
   if (p == NULL)
     throw_type= 1;
   else
