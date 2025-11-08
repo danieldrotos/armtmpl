@@ -185,7 +185,10 @@ void snake_loop()
     {
       switch (c)
         {
-        case 'q': mos_exit(); break;
+        case 'q':
+        	tu_clear_screen();
+        	mos_exit();
+        	break;
         case TU_LEFT:  case 'a': dx= -1; dy=  0; draw_stat(); break;
         case TU_RIGHT: case 'd': dx= +1; dy=  0; draw_stat(); break;
         case TU_UP:    case 'w': dx=  0; dy= -1; draw_stat(); break;
