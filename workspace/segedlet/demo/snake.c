@@ -19,7 +19,7 @@ static struct snake_point_t snake[max_len];
 
 static int run;
 static int snake_len;
-static int dx= 1, dy= 0;
+static int dx, dy;
 static float speed= 5.0;
 static int applex, appley;
 static int points= 0;
@@ -153,6 +153,8 @@ void snake_move()
 void snake_init(char *param)
 {
   int i;
+  dx= 1;
+  dy= 0;
   snake_len= 3;
   snake[0].x= 40;
   snake[0].y= 11;
