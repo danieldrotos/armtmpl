@@ -9,7 +9,7 @@
 #define TGROW_H_
 
 
-extern void throw_init();
+extern void throw_init(char *p);
 extern void throw();
 
 
