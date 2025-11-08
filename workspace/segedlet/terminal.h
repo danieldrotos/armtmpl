@@ -149,6 +149,7 @@ extern void ftu_color(FILE *f, enum tu_color_t bg, enum tu_color_t fg);
 
 #define tu_bgfg(BG,FG) tu_color(BG,FG)
 #define tu_fgbg(FG,BG) tu_color(BG,FG)
+#define TU_BW tu_bgfg(RGB_BLACK, RGB_WHITE)
 
 #define tu_fg(X) tu_color(RGB_NONE,X)
 #define tu_bg(X) tu_color(X,RGB_NONE)
