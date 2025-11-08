@@ -1,10 +1,3 @@
-/*
- * snake.c
- *
- *  Created on: Nov 8, 2025
- *      Author: aa000461
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 
