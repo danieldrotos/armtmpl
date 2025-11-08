@@ -186,7 +186,7 @@ void snake_loop()
       switch (c)
         {
         case 'q':
-        	TU_BW;
+        	tu_bgfg(RGB_BLACK, RGB_WHITE);
         	tu_clear_screen();
         	mos_exit();
         	break;
