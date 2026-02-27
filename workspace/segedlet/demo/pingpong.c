@@ -141,7 +141,7 @@ void do_ball()
 {
   static unsigned int last;
   unsigned int now= msnow();
-  if (now - last > 100)
+  if (now - last > (100-(5*ball_x)/8))
     {
       int nx, ny;
       float fx, fy;
