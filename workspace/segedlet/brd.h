@@ -49,7 +49,6 @@
 #endif
 
 
-
 extern unsigned int brd_leds;
 extern unsigned int brd_btns;
 extern unsigned int brd_buttons;
@@ -71,23 +70,10 @@ extern unsigned int brd_button(int btn);
 extern int brd_button_pressed(int btn);
 extern int brd_button_released(int btn);
 
-enum brd_lmode_t {
-	BRD_LMODE_NONE= 0,
-	BRD_LMODE_LED= 1,
-	BRD_LMODE_PWM= 2
-};
-
 #include "pin.h"
 #include "tim.h"
 
-/*
-enum {
-  brd_nuof_leds= 8,
-  brd_nuof_btns= 4
-};
-*/
-
 extern struct pin_t brd_pins[];
-//extern struct pin_t brd_btn_pins[];
+
 
 #endif /* BRD_HEADER */

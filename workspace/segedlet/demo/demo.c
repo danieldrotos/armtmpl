@@ -8,8 +8,9 @@
 #include "throw.h"
 #include "drop.h"
 #include "angry_birds.h"
-#include "snake.h"
 #include "pingpong.h"
+#include "minesweep.h"
+#include "snake.h"
 #include "mos.h"
 #include "utils.h"
 
@@ -95,5 +96,7 @@ void demo_init()
   mos_create_task("drop", 1, &drop);
   mos_create_task("snake", 1, &snake_loop)->init= &snake_init;
   mos_create_task("pingpong", 1, &pingpong_loop);
+  mos_create_task("minesweep", 1, &mine_loop);
+  mos_start_task("blink", NULL);
 }
 

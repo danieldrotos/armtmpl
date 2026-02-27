@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "utils.h"
 
 #include "dev_gpio.h"
@@ -19,7 +21,7 @@ int pin_init(struct pin_t *p)
           p->pinmask= dev_gpio_pinmask_of(p->name);
           p->oband= dev_gpio_band_output(p->name);
           p->iband= dev_gpio_band_input(p->name);
-          p->frequ= 200;
+          p->frequ= 0;
         }
     }
   return 0;
@@ -115,6 +117,8 @@ void pin_pwm(struct pin_t *p, float duty)
   if (pin_init(p)) return;
   if (p->timer != NULL)
     {
+      if (p->frequ == 0)
+        dev_timer_set_freq(p->timer, p->ch, p->frequ= 200);
       dev_timer_pwm_start(p->timer, p->ch);
       pin_setup(p, PIN_PWM);
       dev_timer_set_duty(p->timer, p->ch, duty);
@@ -184,6 +188,7 @@ int pin_ison(struct pin_t *p)
 
 int pin_val(struct pin_t *p)
 {
+  p->output= 0;
   pin_debounce(p);
   return p->filtered;
 }
@@ -191,9 +196,9 @@ int pin_val(struct pin_t *p)
 void pin_debounce(struct pin_t *p)
 {
   uint now= msnow();
-  if (p->last_debounce - now > 50)
+  if (now - p->last_debounce > 50)
     {
-      p->filtered= pin_ison(p);
+      p->filtered= pin_iget(p);
       p->last_debounce= now;
     }
 }

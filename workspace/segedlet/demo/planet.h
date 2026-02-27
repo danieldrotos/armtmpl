@@ -12,7 +12,6 @@ struct planet_t
   int last_row;
   float t;
   unsigned int t0;
-  char *title;
 };
 
 

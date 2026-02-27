@@ -186,7 +186,7 @@ mos_start_task(char *name, char *param)
       if (t->run)
         {
           tu_color(0, 1);
-          printf("%s is running.\n", name);
+          printf("%s is already running.\n", name);
           return 0;
         }
       if (param && *param)
