@@ -158,16 +158,16 @@ void do_ball()
         }
       ball_fx= fx;
       ball_fy= fy;
-      if ((nx == 2) && ((ny >= bat_y) && (ny <= bat_y+4)))
+      if ((nx == 2) && (dir_x < 0) && ((ny >= bat_y) && (ny <= bat_y+4)))
         {
           dir_x*= -1;
           switch (ny - bat_y)
           {
-            case 0: ball_angle= 60; dir_y= -1; break;
-            case 1: ball_angle= 30; dir_y= -1; break;
+            case 0: ball_angle= 55; dir_y= -1; break;
+            case 1: ball_angle= 20; dir_y= -1; break;
             case 2: ball_angle=  0; dir_y= +1; break;
-            case 3: ball_angle= 30; dir_y= +1; break;
-            case 4: ball_angle= 60; dir_y= +1; break;
+            case 3: ball_angle= 20; dir_y= +1; break;
+            case 4: ball_angle= 55; dir_y= +1; break;
           }
           //recalc(&fx, &fy); nx= fx+1; ny= fy+2;
         }
@@ -194,11 +194,13 @@ void do_game()
 {
   if (!ball_run)
     {
-      if (brd_button_pressed(BTN0))
+      int c= tu_getc();
+      if (brd_button_pressed(BTN0) ||
+          (c == ' '))
         {
           ball_run= 1;
         }
-      if (tu_getc() == 'q')
+      if (c == 'q')
         end();
     }
   else
