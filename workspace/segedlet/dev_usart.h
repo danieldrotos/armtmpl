@@ -68,6 +68,7 @@ extern int dev_ttest_input_avail(int device, int fid);
 extern int dev_ttest_write(int device, int fid, void *buf, int nr);
 
 // Map old AF names to HAL versions
+#if !defined(DEV_F1)
 #define GPIO_AF_USART1 GPIO_AF7_USART1
 #define GPIO_AF_USART2 GPIO_AF7_USART2
 #define GPIO_AF_USART3 GPIO_AF7_USART3
@@ -76,6 +77,7 @@ extern int dev_ttest_write(int device, int fid, void *buf, int nr);
 #define GPIO_AF_USART6 GPIO_AF8_USART6
 //#define GPIO_AF_UART7  GPIO_AF8_UART7
 //#define GPIO_AF_UART8  GPIO_AF8_UART8
+#endif
 
 //extern int ols_drv_usart_install(void);
 

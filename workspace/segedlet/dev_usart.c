@@ -39,11 +39,13 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .rx_pin= "PA10", /* PA10,PB7 */
     .cts_pin= NULL,
     .rts_pin= NULL,
+#ifndef DEV_F1
     .gpio_af
 #ifdef USART1
     		=GPIO_AF_USART1
 #endif
 			,
+#endif
     .IRQn
 #ifdef USART1
 	= USART1_IRQn
@@ -72,11 +74,13 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .rx_pin= "PA3", /* PA3,PD6 */
     .cts_pin= NULL,
     .rts_pin= NULL,
+#ifndef DEV_F1
     .gpio_af
 #ifdef USART2
 	= GPIO_AF_USART2
 #endif
 	,
+#endif
     .IRQn
 #ifdef USART2
 	= USART2_IRQn
@@ -105,6 +109,7 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .rx_pin= "PD9", /* PB11,PD9,PC11 */
     .cts_pin= NULL,
     .rts_pin= NULL,
+#ifndef DEV_F1
     .gpio_af=
 #ifdef USART3
 	GPIO_AF_USART3
@@ -112,6 +117,7 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
 	0
 #endif
 	,
+#endif
     .IRQn=
 #ifdef USART3
 	 USART3_IRQn
@@ -134,6 +140,8 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .h= {.Instance=
 #ifdef UART4
     		UART4
+#elif defined USART4
+			USART4
 #else
 			NULL
 #endif
@@ -143,14 +151,14 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .cts_pin= NULL,
     .rts_pin= NULL,
     .gpio_af=
-#ifdef UART4
+#if defined(UART4) || defined(USART4)
     		GPIO_AF_UART4
 #else
 			0
 #endif
 			,
     .IRQn=
-#ifdef UART4
+#if defined(UART4) || defined(USART4)
     		UART4_IRQn
 #else
 			0
@@ -171,6 +179,8 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .h= {.Instance=
 #ifdef UART5
     		UART5
+#elif defined(USART5)
+			USART5
 #else
 			NULL
 #endif
@@ -180,14 +190,14 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .cts_pin= NULL,
     .rts_pin= NULL,
     .gpio_af=
-#ifdef UART5
+#if defined(UART5) || defined(USART5)
     		GPIO_AF_UART5
 #else
 			0
 #endif
 			,
     .IRQn=
-#ifdef UART5
+#if defined(UART5) || defined(USART5)
     		UART5_IRQn
 #else
 			0
@@ -208,6 +218,8 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .h= {.Instance=
 #ifdef USART6
     		USART6
+#elif defined(UART6)
+			UART6
 #else
 			NULL
 #endif
@@ -217,14 +229,14 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .cts_pin= NULL,
     .rts_pin= NULL,
     .gpio_af=
-#ifdef USART6
+#if defined(USART6) || defined(UART6)
     		GPIO_AF_USART6
 #else
 			0
 #endif
 			,
     .IRQn=
-#ifdef USART6
+#if defined(USART6) || defined(UART6)
     		USART6_IRQn
 #else
 			0
@@ -245,6 +257,8 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .h= {.Instance=
 #ifdef UART7
     		UART7
+#elif defined(USART7)
+			USART7
 #else
 			NULL
 #endif
@@ -254,14 +268,14 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .cts_pin= NULL,
     .rts_pin= NULL,
     .gpio_af=
-#ifdef UART7
+#if defined(UART7) || defined(USART7)
     		GPIO_AF_UART7
 #else
 			0
 #endif
 			,
     .IRQn=
-#ifdef UART7
+#if defined(UART7) || defined(USART7)
     		UART7_IRQn
 #else
 			0
@@ -282,6 +296,8 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .h= {.Instance=
 #ifdef UART8
     		UART8
+#elif defined(USART8)
+			USART8
 #else
 			NULL
 #endif
@@ -291,14 +307,14 @@ struct dev_usart_device_t dev_usart_devices[USART_NUOF_DEVICES]= {
     .cts_pin= NULL,
     .rts_pin= NULL,
     .gpio_af=
-#ifdef UART8
+#if defined(UART8) || defined(USART8)
     		GPIO_AF_UART8
 #else
 			0
 #endif
 			,
     .IRQn=
-#ifdef UART8
+#if defined(UART8) || defined(USART8)
     		UART8_IRQn
 #else
 			0
@@ -584,8 +600,7 @@ UART5_IRQHandler(void)
 */
 
 int jaj= 0;
-#ifndef BRD_L433
-#ifndef BRD_N491
+#if defined(USART6) || defined(UART6)
 void
 USART6_IRQHandler(void)
 {
@@ -593,35 +608,42 @@ USART6_IRQHandler(void)
   NVIC_ClearPendingIRQ(USART6_IRQn);
 }
 #endif
-#endif
 
 void
 dev_usart_clk_on(USART_TypeDef *usart)
 {
+#if defined(USART1) || defined(UART1)
   if (usart == dev_usart_devices[1].h.Instance)
     __HAL_RCC_USART1_CLK_ENABLE();
-  else if (usart == dev_usart_devices[2].h.Instance)
+#endif
+#if defined(USART2) || defined(UART21)
+  if (usart == dev_usart_devices[2].h.Instance)
     __HAL_RCC_USART2_CLK_ENABLE();
-  //else if (usart == usart_devices[3].h.Instance)
-  //  __HAL_RCC_USART3_CLK_ENABLE();
-  //else if (usart == usart_devices[4].h.Instance)
-  //  __HAL_RCC_UART4_CLK_ENABLE();
-  //else if (usart == usart_devices[5].h.Instance)
-  //  __HAL_RCC_UART5_CLK_ENABLE();
-#ifndef BRD_L433
-#ifndef BRD_N491
-  else if (usart == dev_usart_devices[6].h.Instance)
+#endif
+#if defined(USART3) || defined(UART3)
+  if (usart == dev_usart_devices[3].h.Instance)
+	  __HAL_RCC_USART3_CLK_ENABLE();
+#endif
+#if defined(USART4) || defined(UART4)
+  if (usart == dev_usart_devices[4].h.Instance)
+	  __HAL_RCC_UART4_CLK_ENABLE();
+#endif
+#if defined(USART5) || defined(UART5)
+  if (usart == dev_usart_devices[5].h.Instance)
+	  __HAL_RCC_UART5_CLK_ENABLE();
+#endif
+#if defined(USART6) || defined(UART6)
+  if (usart == dev_usart_devices[6].h.Instance)
     __HAL_RCC_USART6_CLK_ENABLE();
 #endif
-#endif
-  /*
-  else if (usart == usart_devices[7].h.Instance)
+#if defined(USART7) || defined(UART7)
+  if (usart == dev_usart_devices[7].h.Instance)
     __HAL_RCC_UART7_CLK_ENABLE();
-  */
-  /*
-  else if (usart == usart_devices[8].h.Instance)
+#endif
+#if defined(USART8) || defined(UART8)
+  if (usart == dev_usart_devices[8].h.Instance)
     __HAL_RCC_UART8_CLK_ENABLE();
-  */
+#endif
 }
 
 int

@@ -39,6 +39,8 @@ int dev_adc_read(ADC_HandleTypeDef *h, int ch)
   sConfig.SamplingTime =
 #ifdef DEV_L4
       ADC_SAMPLETIME_92CYCLES_5;
+#elif defined DEV_F103
+  	  ADC_SAMPLETIME_71CYCLES_5;
 #else
       ADC_SAMPLETIME_84CYCLES;
 #endif

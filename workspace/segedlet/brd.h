@@ -46,6 +46,12 @@
 #define BRD_L4
 #include "brd_l433.h"
 
+#elif defined DEV_F103
+// stm32f103 boards
+#define BRD_F103
+#define BRD_F1
+#include "brd_f103.h"
+
 #endif
 
 

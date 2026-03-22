@@ -193,8 +193,10 @@ dev_gpio_speed_of(char *init)
       return GPIO_SPEED_FREQ_MEDIUM; //GPIO_Speed_25MHz;
     case 'F': case '5':
       return GPIO_SPEED_FREQ_HIGH; //GPIO_Speed_50MHz;
+#ifndef DEV_F103
     case 'H': case '1':
       return GPIO_SPEED_FREQ_VERY_HIGH; //GPIO_Speed_100MHz;
+#endif
     default:
       return GPIO_SPEED_FREQ_LOW; //GPIO_Speed_2MHz;
     }
@@ -334,7 +336,9 @@ dev_gpio_pin_init(int devnr,
   //g.GPIO_OType= otype;
   g./*GPIO_*/Speed= speed;
   g./*GPIO_PuPd*/Pull = pupd;
+#ifndef DEV_F1
   g.Alternate= af;
+#endif
   HAL_GPIO_Init(gpio, &g);
 
   return 0;

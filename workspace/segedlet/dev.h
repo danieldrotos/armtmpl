@@ -43,6 +43,12 @@
 #define DEV_L4
 #include "stm32l4xx_hal.h"
 
+#elif defined STM32F103xB
+// stm32f103
+#define DEV_F103
+#define DEV_F1
+#include "stm32f1xx_hal.h"
+
 #endif
 
 
