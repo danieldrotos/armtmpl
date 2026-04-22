@@ -20,12 +20,14 @@ struct field_t {
 struct field_t table[10][10];
 int curs_x, curs_y;
 int population= 15;
-int base_x=5, base_y=2;
+int base_x=5, base_y=3;
+int size_x= 10, size_y= 10;
 
 enum state_t {
   st_none,
   st_game,
-  st_result
+  st_over,
+  st_win
 };
 
 static enum state_t state= st_none;
@@ -39,6 +41,32 @@ static void end()
   mos_exit();
 }
 
+
+static int onboard(int x, int y)
+{
+  if ((x < 0) || (y < 0))
+    return 0;
+  if ((x >= size_x) || (y >= size_y))
+    return 0;
+  return 1;
+}
+
+static int field_color(int nr)
+{
+  switch (nr)
+    {
+    case 1: return(RGB_BLUE); break;
+    case 2: return(RGB_GREEN); break;
+    case 3: return(RGB_RED); break;
+    case 4: return(RGB_BBLUE); break;
+    case 5: return(RGB_BRED); break;
+    case 6: return(RGB_CYAN); break;
+    case 7: return(RGB_WHITE); break;
+    case 8: return(RGB_BWHITE); break;
+    }
+  return RGB_WHITE;
+}
+
 static int has_bomb(int x, int y)
 {
   if (x<0) return 0;
@@ -48,33 +76,96 @@ static int has_bomb(int x, int y)
   return (TF.bomb)?1:0;
 }
 
+static int has_pin(int x, int y)
+{
+  if (x<0) return 0;
+  if (x>9) return 0;
+  if (y<0) return 0;
+  if (y>9) return 0;
+  return (TF.pin)?1:0;
+}
+
+static void draw_cursor()
+{
+  TU_BW;
+  tu_go(base_x+(curs_x*3), base_y+curs_y);
+  printf("<");
+  tu_go(base_x+(curs_x*3)+2, base_y+curs_y);
+  printf(">");
+}
+
+static void draw_field(int x, int y)
+{
+  tu_go(base_x+(x*3)+1, base_y+y);
+  if (!TF.show)
+    TU_BW, printf("-");
+  else
+    {
+      if (TF.nr == 0)
+	printf(" ");
+      else
+	{
+	  tu_fg(field_color(TF.nr));
+	  printf("%d", TF.nr);
+	}
+    }
+}
+
+static void draw_table()
+{
+  int x, y;
+  for (y=0; y<size_y; y++)
+    for (x=0; x<size_x; x++)
+      draw_field(x, y);
+}
+
+static void redraw()
+{
+  draw_table();
+  draw_cursor();
+}
+
+static int pined_neighbors(int x, int y)
+{
+  int sum= 0;
+  sum+= has_pin(x-1,y-1);
+  sum+= has_pin(  x,y-1);
+  sum+= has_pin(x+1,y-1);
+  sum+= has_pin(x-1,  y);
+  sum+= has_pin(x+1,  y);
+  sum+= has_pin(x-1,y+1);
+  sum+= has_pin(  x,y+1);
+  sum+= has_pin(x+1,y+1);
+  return sum;
+}
+
 static void start_game()
 {
   int x, y, n;
   tu_fgbg(RGB_WHITE, RGB_BLACK);
   tu_clear_screen();
   tu_hide();
-  for (y=0; y<10; y++)
-    for (x=0; x<10; x++)
+  for (y=0; y<size_y; y++)
+    for (x=0; x<size_x; x++)
       {
         TF.bomb= 0;
         TF.pin= 0;
         TF.show= 0;
       }
-  n= (10*10*population)/100;
+  n= (size_x*size_y*population)/100;
   for ( ; n; n--)
     {
       int x,y;
       do
         {
-          x= rand()%10;
-          y= rand()%10;
+          x= rand()%size_x;
+          y= rand()%size_y;
         }
       while (TF.bomb);
       TF.bomb= 1;
     }
-  for (y=0; y<10; y++)
-    for (x=0; x<10; x++)
+  for (y=0; y<size_y; y++)
+    for (x=0; x<size_x; x++)
       {
         int sum= 0;
         sum+= has_bomb(x-1,y-1);
@@ -87,41 +178,46 @@ static void start_game()
         sum+= has_bomb(x+1,y+1);
         TF.nr= sum;
       }
-  for (y=0; y<10; y++)
-    for (x=0; x<10; x++)
-      {
-        tu_go(base_x+(x*3)+1, base_y+y);
-        printf("-");
-      }
+  draw_table();
   curs_x= 5;
   curs_y= 5;
-  tu_go(base_x+(curs_x*3), base_y+curs_y);
-  printf("<");
-  tu_go(base_x+(curs_x*3)+2, base_y+curs_y);
-  printf(">");
+  draw_cursor();
   state= st_game;
 }
 
-static void start_result()
+static int win()
+{
+  int x, y;
+  for (y=0; y<size_y; y++)
+    for (x=0; x<size_x; x++)
+      if ((TF.bomb && !TF.pin) ||
+	  (!TF.bomb && !TF.show))
+	return 0;
+  return 1;
+}
+
+static void start_over()
 {
   int x, y;
   tu_go(1,24);
   TU_BW;
   printf("Game over");
-  for (y=0; y<10; y++)
-    for (x=0; x<10; x++)
+  for (y=0; y<size_y; y++)
+    for (x=0; x<size_x; x++)
       {
         tu_go(base_x+(x*3)+1, base_y+y);
         if (TF.bomb)
           printf("o");
-        /*else if (TF.show)
-          ;*/
-        /*else if (TF.nr == 0)
-          printf("-");*/
-        /*else
-          printf(" ");*/
       }
-  state= st_result;
+  state= st_over;
+}
+
+static void start_win()
+{
+  tu_go(1,24);
+  tu_fg(RGB_BGREEN);
+  printf("You WON!");
+  state= st_win;
 }
 
 static void curs_move(int dx, int dy)
@@ -146,43 +242,48 @@ static void curs_move(int dx, int dy)
   printf(">");
 }
 
-static void show_field()
-{
-  if (CF.show)
-    {
+static void flip_all(int x, int y);
 
-    }
-  else
+static void flip_field(int x, int y, int recursed)
+{
+  if (!onboard(x, y))
+    return;
+  
+  if (state != st_game)
+    return;
+  
+  if (TF.show)
     {
-      if (has_bomb(curs_x, curs_y))
-        {
-          start_result();
-        }
-      else
-        {
-          CF.show= 1;
-          tu_go(base_x+(curs_x*3)+1, base_y+curs_y);
-          if (CF.nr == 0)
-            {
-              printf(" ");
-            }
-          else
-            {
-              switch (CF.nr)
-              {
-                case 1: tu_fg(RGB_BLUE); break;
-                case 2: tu_fg(RGB_GREEN); break;
-                case 3: tu_fg(RGB_RED); break;
-                case 4: tu_fg(RGB_BBLUE); break;
-                case 5: tu_fg(RGB_BRED); break;
-                case 6: tu_fg(RGB_CYAN); break;
-                case 7: tu_fg(RGB_WHITE); break;
-                case 8: tu_fg(RGB_BWHITE); break;
-              }
-              printf("%d", CF.nr);
-            }
-        }
+      if (TF.nr && (TF.nr == pined_neighbors(x, y)) && !recursed)
+	flip_all(x, y);
+      return;
     }
+
+  if (TF.pin)
+    return;
+  
+  if (has_bomb(x, y))
+    {
+      start_over();
+      return;
+    }
+
+  TF.show= 1;
+  draw_field(x, y);
+  if (TF.nr == 0)
+    flip_all(x, y);
+}
+
+static void flip_all(int x, int y)
+{
+  if (state == st_game) flip_field(x-1,y-1, 1);
+  if (state == st_game) flip_field(x  ,y-1, 1);
+  if (state == st_game) flip_field(x+1,y-1, 1);
+  if (state == st_game) flip_field(x-1,y  , 1);
+  if (state == st_game) flip_field(x+1,y  , 1);
+  if (state == st_game) flip_field(x-1,y+1, 1);
+  if (state == st_game) flip_field(x  ,y+1, 1);
+  if (state == st_game) flip_field(x+1,y+1, 1);
 }
 
 static void play_game()
@@ -192,12 +293,17 @@ static void play_game()
   if (c)
     {
       switch (c)
-      {
-        case TU_UP   : curs_move( 0,-1); break;
-        case TU_DOWN : curs_move( 0,+1); break;
-        case TU_LEFT : curs_move(-1, 0); break;
-        case TU_RIGHT: curs_move(+1, 0); break;
-        case ' '     : show_field(); break;
+	{
+	case TU_UP    : curs_move( 0,-1); break;
+	case TU_DOWN  : curs_move( 0,+1); break;
+        case TU_LEFT  : curs_move(-1, 0); break;
+        case TU_RIGHT : curs_move(+1, 0); break;
+        case ' '      :
+	  flip_field(curs_x, curs_y, 0);
+	  if (CF.show && !CF.bomb && win())
+	    start_win();
+	  break;
+	case 'L'-'A'+1: redraw(); break;
         case 'f': case 'F': case 'p': case 'P':
           if (!CF.show)
             {
@@ -207,6 +313,8 @@ static void play_game()
                 printf("#");
               else
                 printf("-");
+	      if (CF.pin && win())
+		start_win();
             }
           break;
         case 'q': end(); break;
@@ -218,13 +326,21 @@ void mine_loop()
 {
   int c;
   switch (state)
-  {
+    {
     case st_none: start_game(); break;
     case st_game: play_game(); break;
-    case st_result:
+    case st_over:
+    case st_win:
       c= tu_getc();
-      if (c == ' ')
-        start_game();
+      switch (c)
+	{
+        case TU_UP   : curs_move( 0,-1); break;
+        case TU_DOWN : curs_move( 0,+1); break;
+        case TU_LEFT : curs_move(-1, 0); break;
+        case TU_RIGHT: curs_move(+1, 0); break;
+	case ' '     : start_game(); break;
+	case 'q'     : end(); break;
+	}
       break;
-  }
+    }
 }
