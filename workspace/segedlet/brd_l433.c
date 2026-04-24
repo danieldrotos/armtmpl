@@ -6,7 +6,7 @@
 
 struct pin_t brd_pins[]= {
     PIN_OPIN("PB13"),
-    PIN_BTNL("PC13"),
+    PIN_BTNH("PC13"),
     PIN_NONE
 };
 
