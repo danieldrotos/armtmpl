@@ -13,6 +13,7 @@
 #include "snake.h"
 #include "mos.h"
 #include "utils.h"
+#include "cells.h"
 
 
 static int half_period= 500; // in ms
@@ -97,6 +98,7 @@ void demo_init()
   mos_create_task("snake", 1, &snake_loop)->init= &snake_init;
   mos_create_task("pingpong", 1, &pingpong_loop);
   mos_create_task("minesweep", 1, &mine_loop);
+  mos_create_task("cells",1 , &cells_loop);
   mos_start_task("blink", NULL);
 }
 
