@@ -92,23 +92,6 @@ static void draw(int xtop, int ytop, char tab[XS][YS], char c)
     }
 }
 
-static void draw2(int topx, int topy)
-{
-  int x, y;
-  for (y=0;y<YS;y++)
-    {
-      tu_go(topx, topy+y);
-      for (x=0;x<XS;x++)
-	{
-	  if (act[x][y] != next[x][y])
-	    {
-	      printf("%c", next[x][y]);
-	      fflush(0);
-	    }
-	}
-    }
-}
-
 static void step_done()
 {
   // next -->> act
@@ -118,18 +101,6 @@ static void step_done()
       {
 	act[x][y]= (next[x][y]==' ')?' ':'*';
       }
-}
-
-static void print()
-{
-  //tu_go(1,YS+3);
-  int x, y;
-  for (y=0;y<YS;y++)
-    {
-      printf("\n");
-      for (x=0;x<XS;x++)
-	printf("%2d %2d %c= %c -> %c\n",x,y,act[x][y],sum[x][y],next[x][y]);
-    }
 }
 
 static void status()
