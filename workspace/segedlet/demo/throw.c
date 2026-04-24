@@ -25,6 +25,8 @@ void throw_init_common(int nr)
       planets[i].col= (i+1)*j;
       tu_go(planets[i].col, planets[i].row);
       printf("@");
+      tu_go(planets[i].col-1, 1);
+      printf("%s", planets[i].title);
     }
   tu_go(1,max_row+1);
   printf("%d-----------------------------------------------------------------------------",
