@@ -3,14 +3,14 @@
 
 
 enum {
-  LED0= 1, // PC8
-  LED1= 2, // PC9
-  LED2= 3, // PC10
-  LED3= 4, // PC11
-  BTN0= 5, // PC12
-  BTN1= 6, // PC13
-  BTN2= 7, // PC14
-  BTN3= 8  // PC15
+  LED0= 0, // PC8
+  LED1= 1, // PC9
+  LED2= 2, // PC10
+  LED3= 3, // PC11
+  BTN0= 4, // PC12
+  BTN1= 5, // PC13
+  BTN2= 6, // PC14
+  BTN3= 7  // PC15
 };
 
 #define TDR      DR
