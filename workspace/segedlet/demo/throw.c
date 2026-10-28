@@ -11,10 +11,10 @@
 
 
 static int inited= 0;
-int throw_type= 1;
+static int throw_type= 1;
 
 
-void throw_init_common(int nr)
+static void throw_init_common(int nr)
 {
   int i;
   int j= 80/(nr+1);
@@ -28,29 +28,29 @@ void throw_init_common(int nr)
       tu_go(planets[i].col-1, 1);
       printf("%s", planets[i].title);
     }
-  tu_go(1,max_row+1);
+  tu_go(1,planet_max_row+1);
   printf("%d-----------------------------------------------------------------------------",
          throw_type);
   inited= 1;
 }
 
 
-void throw_init1()
+static void throw_init1()
 {
   int i, nr= 0;
   for (i=0; planets[i].col >= 0; i++)
     {
-      planets[i].v0= sqrt(2*planets[i].g*hmax);
+      planets[i].v0= sqrt(2*planets[i].g*planet_hmax);
       planets[i].t0= HAL_GetTick();
       planets[i].h= 0;
-      planets[i].last_row= planets[i].row= max_row;
+      planets[i].last_row= planets[i].row= planet_max_row;
       nr++;
     }
   throw_init_common(nr);
 }
 
 
-void throw_init2()
+static void throw_init2()
 {
   int i, nr= 0;
   float gmin= planets[0].g, v0;
@@ -58,12 +58,12 @@ void throw_init2()
     {
       planets[i].t0= HAL_GetTick();
       planets[i].h= 0;
-      planets[i].last_row= planets[i].row= max_row;
+      planets[i].last_row= planets[i].row= planet_max_row;
       nr++;
       if (planets[i].g < gmin)
         gmin= planets[i].g;
     }
-  v0= sqrt(2*gmin*hmax);
+  v0= sqrt(2*gmin*planet_hmax);
   for (i= 0; planets[i].col >= 0; i++)
     planets[i].v0= v0;
   throw_init_common(nr);
@@ -106,7 +106,7 @@ void throw()
           struct planet_t *p= &planets[i];
           p->t= (now-p->t0)/1000.0;
           p->h= p->v0*p->t - p->g*p->t*p->t/2.0;
-          (*p).row= max_row-(int)(p->h);
+          (*p).row= planet_max_row-(int)(p->h);
           if (p->h < 0)
             {
               p->t0= now;

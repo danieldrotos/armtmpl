@@ -92,7 +92,7 @@ static int snake_apple(int newx, int newy)
   return 0;
 }
 
-int snake_collide(int newx, int newy)
+static int snake_collide(int newx, int newy)
 {
   int i;
   for (i= 0; i < snake_len; i++)
@@ -110,7 +110,7 @@ int snake_collide(int newx, int newy)
   return 0;
 }
 
-void snake_move()
+static void snake_move()
 {
   static unsigned int last;
   unsigned int now= HAL_GetTick();

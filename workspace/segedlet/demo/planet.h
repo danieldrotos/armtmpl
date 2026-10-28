@@ -16,8 +16,8 @@ struct planet_t
 };
 
 
-extern float hmax;
-extern int max_row;
+extern float planet_hmax;
+extern int planet_max_row;
 extern struct planet_t planets[];
 
 

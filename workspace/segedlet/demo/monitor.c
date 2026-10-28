@@ -10,7 +10,7 @@
 
 static char cmd[CMD_LEN]= { 0 };
 
-struct tu_input_t mon= {
+static struct tu_input_t mon= {
 		.raw_mode= 0,
 		.line= { 0 }
 };

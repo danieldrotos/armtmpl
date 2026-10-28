@@ -5,8 +5,8 @@
 #include "planet.h"
 
 
-float hmax= 20.1;
-int max_row= 23;
+float planet_hmax= 20.1;
+int planet_max_row= 23;
 
 struct planet_t planets[]=
     {

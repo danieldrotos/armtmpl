@@ -11,7 +11,7 @@
 static enum drop_state_t state= ds_none;
 
 
-void drop_init()
+static void drop_init()
 {
   int i, nr= 0, j;
   tu_clear_screen();
@@ -32,13 +32,13 @@ void drop_init()
       tu_go(planets[i].col-1, 1);
       printf("%s", planets[i].title);
     }
-  tu_go(1,max_row+1);
+  tu_go(1,planet_max_row+1);
   printf("------------------------------------------------------------------------------");
   state= ds_run;
 }
 
 
-void drop_step()
+static void drop_step()
 {
   int i;
   static unsigned int last;
@@ -49,7 +49,7 @@ void drop_step()
       for (i=0; planets[i].col >= 0; i++)
         {
           struct planet_t *p= &planets[i];
-          if (p->row < max_row)
+          if (p->row < planet_max_row)
             {
               p->t= (now-p->t0)/1000.0;
               p->h= p->g*p->t*p->t/2.0;

@@ -17,11 +17,11 @@ struct field_t {
   int nr;
 };
 
-struct field_t table[10][10];
-int curs_x, curs_y;
-int population= 15;
-int base_x=5, base_y=3;
-int size_x= 10, size_y= 10;
+static struct field_t table[10][10];
+static int curs_x, curs_y;
+static int population= 15;
+static int base_x=5, base_y=3;
+static int size_x= 10, size_y= 10;
 
 enum state_t {
   st_none,

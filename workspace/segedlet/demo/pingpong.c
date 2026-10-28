@@ -16,15 +16,15 @@ enum state_t {
 static enum state_t state= st_none;
 
 // bat data
-int bat_y;
+static int bat_y;
 
 // ball data
-int ball_run;
-int ball_x, ball_y;
-float ball_fx, ball_fy;
-int dir_x, dir_y;
-float ball_angle;
-int game_over;
+static int ball_run;
+static int ball_x, ball_y;
+static float ball_fx, ball_fy;
+static int dir_x, dir_y;
+static float ball_angle;
+static int game_over;
 
 
 static void end()
@@ -127,7 +127,7 @@ static void do_bat()
   }
 }
 
-void recalc(float *px, float *py)
+static void recalc(float *px, float *py)
 {
   float r= ball_angle * M_PI / 180.0;
   float dx, dy;
@@ -137,7 +137,7 @@ void recalc(float *px, float *py)
   *py= ball_fy+dy;
 }
 
-void do_ball()
+static void do_ball()
 {
   static unsigned int last;
   unsigned int now= msnow();
@@ -190,7 +190,7 @@ void do_ball()
     }
 }
 
-void do_game()
+static void do_game()
 {
   if (!ball_run)
     {
@@ -210,7 +210,7 @@ void do_game()
     }
 }
 
-void do_result()
+static void do_result()
 {
   int c;
   c= tu_getc();

@@ -366,7 +366,7 @@ shoot()
 
 static int game_inited= 0;
 
-void
+static void
 shoot_game_init()
 {
   int i;
